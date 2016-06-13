@@ -18,7 +18,9 @@ var pageSize = 10; //每页十条记录
 
 
 
-var BJRegion = ["chaoyang", "haidian", "fengtai", "dongchenga", "xicheng", "chongwen", "xuanwu",
+var BJRegion = [
+    "chaoyang",
+    "haidian", "fengtai", "dongchenga", "xicheng", "chongwen", "xuanwu",
     "shijingshan", "changping", "tongzhou", "daxing", "shunyi", "huairou", "fangshan",
     "mentougou", "miyun", "pinggua", "yanqing", "zhoubiana"
 ]
@@ -111,59 +113,62 @@ function praseBody(body, district, url) {
 //生成北京的小区以及房价
 router.get("/genBJFangData", function(req, res) {
 
-        var url = "http://beijing.anjuke.com/community/";
-        var testUrl = "http://beijing.anjuke.com/community/chaoyang/p100/";
+    var url = "http://beijing.anjuke.com/community/";
+    var testUrl = "http://beijing.anjuke.com/community/chaoyang/p100/";
 
-        //	request(testUrl,function(err,response,body){
-        //        if (!err && response.statusCode == 200) {
-        //        	 praseBody(body,'chaoyang');
-        //
-        //        }
-        //	})
+    //  request(testUrl,function(err,response,body){
+    //        if (!err && response.statusCode == 200) {
+    //           praseBody(body,'chaoyang');
+    //
+    //        }
+    //  })
 
-        //	BJRegion.forEach(function(region){
+    //  BJRegion.forEach(function(region){
 
-        //不可用for，异步并发太多会被anjuke所屏蔽， 用async模块，并模拟随机事件
-        var createZones = function(region, count) {
+    //不可用for，异步并发太多会被anjuke所屏蔽， 用async模块，并模拟随机事件
+    var createZones = function(region, count) {
 
-            console.log("create zones...............", region, count);
-            var rurl = url + region + "/p" + count;
-            request(rurl, function(err, response, body) {
-                console.log("request url...............", rurl);
-                var zones = praseBody(body, region, rurl);
-            });
-        }
-
-
-        async.forEachSeries(BJRegion, function(region, key, callback) {
-
-            var count = 0;
-
-            console.log("region.....", region);
-
-            async.whilst(
-                function() {
-                    return count < 100; },
-                function(cb) {
-                    count++;
-                    createZones(region, count);
-                    console.log("count", count);
-                    setTimeout(cb, 500);
-                },
-                function(err, count) {
-
-                    console.log("err...........", err, count);
+        console.log("create zones...............", region, count);
+        var rurl = url + region + "/p" + count;
+        request(rurl, function(err, response, body) {
+            console.log("request url...............", rurl);
+            var zones = praseBody(body, region, rurl);
+        });
+    }
 
 
-                }
-            ); //whilst
+    async.forEachOfSeries(BJRegion, function(region, key, callback) {
 
-        }); //for eachof
+        var count = 0;
+
+        console.log("region.....", region);
+
+        async.whilst(
+            function() {
+                return count < 100;
+            },
+            function(cb) {
+                count++;
+                createZones(region, count);
+                console.log("region.....", region, ".....count.....", count);
+                setTimeout(cb, 500);
+            },
+            function(err, count) {
+
+                console.log("err...........", err, count);
+
+
+            }
+        ); //whilst
+
+        callback();
+
+    }); //for eachof
 
 
 
-        res.json({state:0});
-    })
+    res.json({ state: 0 });
+})
 
 
 //根据小区id获取zoneprices
@@ -288,7 +293,7 @@ router.post('/saveXy', function(req, res) {
     var zone = req.body.zone;
     var i = 0;
 
-    //	zones.forEach(function(zone){
+    //  zones.forEach(function(zone){
     Zone.findById(zone._id, function(err, pzone) {
 
 
@@ -310,7 +315,7 @@ router.post('/saveXy', function(req, res) {
 
     })
 
-    //	})
+    //  })
 
 })
 
