@@ -9,6 +9,7 @@ var ZoneSchema = new mongoose.Schema({
     y: Number,	       //百度地图纬度
     priceRate:Number,     //房价增加速率
     zonePrices:[],
+    ajkid: String,
 	
 	
 	meta: {

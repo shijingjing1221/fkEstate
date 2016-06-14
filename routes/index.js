@@ -19,11 +19,26 @@ var pageSize = 10; //每页十条记录
 
 
 var BJRegion = [
-    "chaoyang",
-    "haidian", "fengtai", "dongchenga", "xicheng", "chongwen", "xuanwu",
-    "shijingshan", "changping", "tongzhou", "daxing", "shunyi", "huairou", "fangshan",
-    "mentougou", "miyun", "pinggua", "yanqing", "zhoubiana"
-]
+    { name: "haidian", pageNum: 50 },
+    { name: "changping", pageNum: 25 },
+    { name: "chaoyang", pageNum: 50 },
+
+    { name: "fengtai", pageNum: 40 },
+    { name: "dongchenga", pageNum: 24 },
+    { name: "xicheng", pageNum: 24 },
+    { name: "chongwen", pageNum: 8 },
+    { name: "xuanwu", pageNum: 19 },
+    { name: "shijingshan", pageNum: 9 },
+
+    { name: "tongzhou", pageNum: 23 },
+    { name: "daxing", pageNum: 18 },
+    { name: "shunyi", pageNum: 11 }
+];
+
+// var BJRegion = ["chaoyang", "haidian", "fengtai", "dongchenga", "xicheng", "chongwen", "xuanwu",
+//     "shijingshan", "changping", "tongzhou", "daxing", "shunyi", "huairou", "fangshan",
+//     "mentougou", "miyun", "pinggua", "yanqing", "zhoubiana"
+// ];
 
 
 mongoose.connect(package.dblink);
@@ -35,10 +50,11 @@ router.get('/', function(req, res) {
 
 
 
-function saveBJZone(name, id, district) {
+function saveBJZone(name, ajkid, district) {
 
     var priceUrl = "http://beijing.anjuke.com/ajax/pricetrend/comm?cid=";
     var zone = new Zone({
+        ajkid: ajkid,
         city: "Beijing",
         district: district,
         name: name,
@@ -51,7 +67,7 @@ function saveBJZone(name, id, district) {
         if (error) console.log(error);
         console.log("save zone success.......", pZone.name);
         //生成小区房价
-        request(priceUrl + id, function(err, response, body) {
+        request(priceUrl + ajkid, function(err, response, body) {
 
             if (!err && response.statusCode == 200) {
 
@@ -114,16 +130,7 @@ function praseBody(body, district, url) {
 router.get("/genBJFangData", function(req, res) {
 
     var url = "http://beijing.anjuke.com/community/";
-    var testUrl = "http://beijing.anjuke.com/community/chaoyang/p100/";
-
-    //  request(testUrl,function(err,response,body){
-    //        if (!err && response.statusCode == 200) {
-    //           praseBody(body,'chaoyang');
-    //
-    //        }
-    //  })
-
-    //  BJRegion.forEach(function(region){
+    // var testUrl = "http://beijing.anjuke.com/community/chaoyang/p100/";
 
     //不可用for，异步并发太多会被anjuke所屏蔽， 用async模块，并模拟随机事件
     var createZones = function(region, count) {
@@ -141,15 +148,16 @@ router.get("/genBJFangData", function(req, res) {
 
         var count = 0;
 
-        console.log("region.....", region);
+        console.log("region.....", region.name, "...key...", key);
 
         async.whilst(
             function() {
-                return count < 100;
+                // return count < 2;
+                return count < region.pageNum;
             },
             function(cb) {
                 count++;
-                createZones(region, count);
+                createZones(region.name, count);
                 console.log("region.....", region, ".....count.....", count);
                 setTimeout(cb, 500);
             },
