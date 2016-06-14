@@ -69,7 +69,7 @@ function makeLabel(zones) {
     zones.forEach(function(zone) {
         var point = new BMap.Point(zone.y, zone.x);
         var mylabel = new BMap.Label(
-            zone.name, {
+            zone.name+"("+zone.priceRate.toFixed(0)+")", {
                 offset: new BMap.Size(-60, -60),
                 position: point
             }
