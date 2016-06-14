@@ -79,7 +79,9 @@ function makeLabel(zones) {
 
         if (zone.priceRate >= 4000) {
             fontColor = "red";
-        } else if (zone.priceRate < 4000 && zone.priceRate >= 2000) {
+        } else if (zone.priceRate < 4000 && zone.priceRate >= 3000) {
+            fontColor = "violet";
+        } else if (zone.priceRate < 3000 && zone.priceRate >= 2000) {
             fontColor = "blue";
         } else if (zone.priceRate < 2000 && zone.priceRate >= 1000) {
             fontColor = "green";
