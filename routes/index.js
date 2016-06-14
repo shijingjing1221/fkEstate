@@ -159,7 +159,7 @@ router.get("/genBJFangData", function(req, res) {
                 count++;
                 createZones(region.name, count);
                 console.log("region.....", region, ".....count.....", count);
-                setTimeout(cb, 500);
+                setTimeout(cb, 5000);
             },
             function(err, count) {
 
