@@ -38,6 +38,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.moment = require('moment');
 
+//
+//var test = require('./routes/test');
+//app.use('/test', test);
 app.use('/', routes);
 
 // catch 404 and forward to error handler
@@ -71,8 +74,6 @@ app.use(function(err, req, res, next) {
     //     error: {}
     // });
 });
-// app.listen(3000);
 
-// console.log('Server running at http://localhost:3000');
 
 module.exports = app;

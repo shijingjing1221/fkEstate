@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 var underscore = require('underscore');
 var request = require('request');
 var Zone = require('../models/zone');
+var CrawlerPage = require('../models/crawlerPage');
+
 var http = require("http");
 var ZonePrice = require('../models/zonePrice');
 var unirest = require('unirest');
@@ -19,20 +21,20 @@ var pageSize = 10; //每页十条记录
 
 
 var BJRegion = [
-    { name: "haidian", pageNum: 50 },
-    { name: "changping", pageNum: 25 },
-    { name: "chaoyang", pageNum: 50 },
+     //{ name: "haidian", pageNum: 50 },
+     //{ name: "changping", pageNum: 25 },
+     { name: "chaoyang", pageNum: 50 },
 
-    { name: "fengtai", pageNum: 40 },
-    { name: "dongchenga", pageNum: 24 },
-    { name: "xicheng", pageNum: 24 },
-    { name: "chongwen", pageNum: 8 },
-    { name: "xuanwu", pageNum: 19 },
-    { name: "shijingshan", pageNum: 9 },
+    // { name: "fengtai", pageNum: 40 },
+    // { name: "dongchenga", pageNum: 24 },
+    // { name: "xicheng", pageNum: 24 },
+    // { name: "chongwen", pageNum: 8 },
+    //{ name: "xuanwu", pageNum: 19 },
+    // { name: "shijingshan", pageNum: 9 },
 
-    { name: "tongzhou", pageNum: 23 },
-    { name: "daxing", pageNum: 18 },
-    { name: "shunyi", pageNum: 11 }
+    // { name: "tongzhou", pageNum: 23 },
+    // { name: "daxing", pageNum: 18 },
+    // { name: "shunyi", pageNum: 11 }
 ];
 
 // var BJRegion = ["chaoyang", "haidian", "fengtai", "dongchenga", "xicheng", "chongwen", "xuanwu",
@@ -98,7 +100,7 @@ function saveBJZone(name, ajkid, district) {
 
 
 //对北京的房价进行处理
-function praseBody(body, district, url) {
+function praseBody(body, district, url, count) {
 
     if (typeof(body) == undefined) return false;
 
@@ -119,7 +121,23 @@ function praseBody(body, district, url) {
                 saveBJZone(name[0], AJKId[0], district)
             }
 
-        })
+        });
+
+        var crawlerPageObj = CrawlerPage.findOne({
+            city: 'beijing', //城市
+            district: district, //行政区域，浦东
+            pageIndex: count,
+            isMatched: false
+        }, function(err, obj) {
+            console.log('Old crawlerPageObj:', obj);
+            if (obj != null) {
+                obj.isMatched = true;
+                console.log('Save crawlerPageObj:', obj);
+                obj.save();
+            }
+
+        });
+
     } else {
         console.log("not matched", url);
     }
@@ -139,7 +157,7 @@ router.get("/genBJFangData", function(req, res) {
         var rurl = url + region + "/p" + count;
         request(rurl, function(err, response, body) {
             console.log("request url...............", rurl);
-            var zones = praseBody(body, region, rurl);
+            var zones = praseBody(body, region, rurl, count);
         });
     }
 
@@ -335,6 +353,8 @@ router.get('/getPricedZone', function(req, res) {
     //返回小区名
     Zone.find({})
         .where("priceRate").gt(0)
+        .where("x").equals(0)
+        .where("y").equals(0)
         .select("name _id")
         .exec(function(err, zones) {
             res.json({
@@ -455,7 +475,7 @@ router.get('/getPricedZone', function(req, res) {
 router.get('/genPriceChange', function(req, res) {
 
 
-    Zone.find({}, function(err, zones) {
+    Zone.find({priceRate: null}, function(err, zones) {
 
         zones.forEach(function(pZone) {
 

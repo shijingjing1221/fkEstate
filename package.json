@@ -1,7 +1,7 @@
 {
   "name": "yoouda",
   "version": "0.0.1",
-  "dblink":"mongodb://localhost:27017/bjprice",
+  "dblink":"mongodb://localhost:27017/bjprice3",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
