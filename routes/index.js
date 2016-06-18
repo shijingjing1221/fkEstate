@@ -23,17 +23,20 @@ var pageSize = 10; //每页十条记录
 var BJRegion = [
      //{ name: "haidian", pageNum: 50 },
      //{ name: "changping", pageNum: 25 },
-     { name: "chaoyang", pageNum: 50 },
+     //{ name: "chaoyang", pageNum: 50 },
 
-    // { name: "fengtai", pageNum: 40 },
-    // { name: "dongchenga", pageNum: 24 },
+     //{ name: "fengtai", pageNum: 40 },
+     //{ name: "dongchenga", pageNum: 24 },
     // { name: "xicheng", pageNum: 24 },
     // { name: "chongwen", pageNum: 8 },
     //{ name: "xuanwu", pageNum: 19 },
-    // { name: "shijingshan", pageNum: 9 },
+    // { name: "daxing", pageNum: 18 },
+    { name: "shijingshan", pageNum: 9 },
+    //TODO
+
 
     // { name: "tongzhou", pageNum: 23 },
-    // { name: "daxing", pageNum: 18 },
+
     // { name: "shunyi", pageNum: 11 }
 ];
 

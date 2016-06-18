@@ -9,6 +9,13 @@ map.centerAndZoom("北京", 15);
 
 var allOverlays = []; //储存所有的图层
 
+var liveChart = null;
+
+$('#myModal').on('hidden.bs.modal', function (e) {
+    console.log("Trigger when hide the modal");
+    liveChart.destroy();
+});
+
 map.addEventListener('load', function() {
 
 
@@ -112,8 +119,8 @@ function makeLabel(zones) {
                 success: function(result) {
                     //生成地图标注
                     //						var data =  eval ("(" + data + ")");
-                    labels = [];
-                    data = [];
+                    var labels = [];
+                    var detailed_prices = [];
 
                     var tempDateTime = "";
                     result.zoneprices.forEach(function(price) {
@@ -124,7 +131,7 @@ function makeLabel(zones) {
 
                         if (dateTime != tempDateTime) {
                             labels.push(dateTime);
-                            data.push(price.price);
+                            detailed_prices.push(price.price);
                             tempDateTime = dateTime;
                         }
 
@@ -134,6 +141,11 @@ function makeLabel(zones) {
                     $('#myModal').modal();
 
                     var ctx = $("#myChart");
+
+
+
+
+                    console.log("labels: ", labels, "detailed_prices: ", detailed_prices);
 
                     var modalData = {
                         labels: labels,
@@ -146,25 +158,26 @@ function makeLabel(zones) {
                             fill: false,
 
 
-                            data: data
+                            data: detailed_prices
                         }]
                     }
 
 
-                    new Chart(ctx, {
+                    liveChart = new Chart(ctx, {
                         type: 'line',
                         data: modalData,
-                        options: {
-                            responsive: true
-                        }
+                        //options: {
+                        //    responsive: true
+                        //}
                     });
 
                     $("#myModalLabel").html(result.name);
+
                 }
             })
         });
 
-        console.log("Add mylabel to map:", mylabel);
+        //console.log("Add mylabel to map:", mylabel);
         map.addOverlay(mylabel);
         allOverlays.push(mylabel);
 
