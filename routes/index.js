@@ -31,13 +31,14 @@ var BJRegion = [
     // { name: "chongwen", pageNum: 8 },
     //{ name: "xuanwu", pageNum: 19 },
     // { name: "daxing", pageNum: 18 },
-    { name: "shijingshan", pageNum: 9 },
+    //{ name: "shijingshan", pageNum: 9 },
+    //{ name: "tongzhou", pageNum: 23 },
+
+    //{ name: "shunyi", pageNum: 11 }
     //TODO
 
 
-    // { name: "tongzhou", pageNum: 23 },
 
-    // { name: "shunyi", pageNum: 11 }
 ];
 
 // var BJRegion = ["chaoyang", "haidian", "fengtai", "dongchenga", "xicheng", "chongwen", "xuanwu",
